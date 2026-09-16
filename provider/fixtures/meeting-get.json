@@ -1,0 +1,19 @@
+{
+  "$comment": "A meeting read back by its id -- the id echoes what was asked for, the same trap as Zoom's meeting_get, so a flow wiring {{ $json.data.id }} against the wrong meeting is caught rather than faked past.",
+  "operation": "meeting_get",
+
+  "response": {
+    "id": { "$config": "meetingId", "as": "string", "fallback": { "$fake": "id", "prefix": "MSo" } },
+    "subject": "Weekly sync",
+    "startDateTime": "2026-09-22T14:00:00Z",
+    "endDateTime": "2026-09-22T14:30:00Z",
+    "joinWebUrl": "https://teams.microsoft.com/l/meetup-join/19%3ameeting_abc123%40thread.v2/0",
+    "participants": {
+      "organizer": {
+        "identity": {
+          "user": { "id": { "$config": "userId", "as": "string", "fallback": { "$fake": "id", "prefix": "u" } }, "displayName": "Ada Lovelace" }
+        }
+      }
+    }
+  }
+}

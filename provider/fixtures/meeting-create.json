@@ -1,0 +1,25 @@
+{
+  "$comment": "A newly created onlineMeeting, echoing subject/start/end back exactly as Graph does. joinMeetingIdSettings.passcode is present only when a passcode was required -- omitting it entirely when it was not would be a different shape than Graph's own null.",
+  "operation": "meeting_create",
+
+  "response": {
+    "id": { "$fake": "id", "prefix": "MSo" },
+    "creationDateTime": "2026-09-16T09:00:00.0000000Z",
+    "subject": { "$config": "subject", "as": "string", "fallback": "Weekly sync" },
+    "startDateTime": { "$config": "startDateTime", "as": "string", "fallback": "2026-09-22T14:00:00Z" },
+    "endDateTime": { "$config": "endDateTime", "as": "string", "fallback": "2026-09-22T14:30:00Z" },
+    "joinWebUrl": "https://teams.microsoft.com/l/meetup-join/19%3ameeting_abc123%40thread.v2/0",
+    "participants": {
+      "organizer": {
+        "identity": {
+          "user": { "id": { "$fake": "id", "prefix": "u" }, "displayName": "Ada Lovelace" }
+        }
+      }
+    },
+    "joinMeetingIdSettings": {
+      "joinMeetingId": { "$fake": "digits", "length": 9 },
+      "isPasscodeRequired": { "$config": "passcodeRequired", "as": "boolean", "default": false },
+      "passcode": { "$fake": "digits", "length": 6 }
+    }
+  }
+}

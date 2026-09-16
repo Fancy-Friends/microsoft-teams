@@ -1,0 +1,74 @@
+{
+  "$comment": "THE hand-written part. Four packages -- ui, js, php, py -- are generated from this directory and are never edited. Fix this file, then regenerate. This is the third and last CONNECTOR piece of Tynn #9 (MOIC's meeting bot) -- Microsoft Graph's onlineMeeting resource, verified against Microsoft Learn's own reference pages on 2026-09-16 (application-post-onlinemeetings, onlinemeeting-get, onlinemeeting-list-transcripts). The BOT RUNTIME -- a service that actually joins a call and streams live media -- is the owner's call, not this estate's, and Graph's own path there is an application-hosted media bot: a .NET/Azure service, not a REST connector. What ships here: create a meeting (a join link), read it back, and find a finished meeting's transcript.",
+
+  "connectorApi": 1,
+
+  "service": "microsoft_teams",
+  "title": "Microsoft Teams",
+  "domain": "messaging",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/onlinemeeting",
+
+  "auth": "oauth2",
+  "requires": ["accessToken"],
+
+  "authorize": {
+    "kind": "bearer",
+    "credential": "accessToken"
+  },
+
+  "oauth": {
+    "flow": "authorization_code",
+    "authorizeUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+    "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+    "scopes": ["OnlineMeetings.ReadWrite.All", "OnlineMeetingTranscript.Read.All", "offline_access"],
+    "accessTokenCredential": "accessToken",
+    "refreshTokenCredential": "refreshToken",
+    "refreshTokenRotates": false,
+    "$refreshTokenRotates": "Replaced but NOT revoked -- the same Microsoft identity platform behaviour microsoft-outlook already documents: \"Refresh tokens replace themselves with a fresh token upon every use. The Microsoft identity platform doesn't revoke old refresh tokens when used to fetch new access tokens.\" A retried or concurrent refresh cannot revoke the grant, which is the only thing the flag guards.",
+    "accessTokenTtlSeconds": 3600,
+    "$scopeComment": "OnlineMeetings.ReadWrite.All is what meeting_create and meeting_get need as APPLICATION permissions -- the /users/{userId}/onlineMeetings path a bot calls without a live user session, per Microsoft's own least-privilege table. OnlineMeetingTranscript.Read.All is what transcript_list needs. Both require a tenant administrator to grant an application access policy authorizing this app to act on a named user's behalf (see setup) -- consent alone is not enough, unlike a normal delegated OAuth flow.",
+    "$comment": "The package DECLARES the dance and does not perform it. `common` as the tenant accepts work, school and personal accounts, though the application-permission path this connector uses needs a WORK OR SCHOOL account specifically -- personal Microsoft accounts are not supported for any of these three operations, per Microsoft's own permission tables."
+  },
+
+  "sandbox": "separate-account",
+  "sandboxNote": "Microsoft's test estate is a Microsoft 365 Developer Program sandbox: a separate E5 tenant with its own users and its own OAuth consent, on the SAME host -- the same fact microsoft-outlook already verified for Graph generally. Eligibility is limited (Visual Studio Professional/Enterprise, ISV Success / MAICPP partners, or Premier/Unified Support) and the tenant expires after 90 days of no development activity. Without one, every call reaches a real tenant.",
+
+  "baseUrls": {
+    "live": "https://graph.microsoft.com",
+    "sandbox": "https://graph.microsoft.com"
+  },
+
+  "encoding": "json",
+
+  "credentialFields": [
+    {
+      "key": "clientId",
+      "label": "Application (client) ID",
+      "scope": "provider",
+      "secret": false,
+      "help": "From the Microsoft Entra admin center -> App registrations. ONE value for the whole installation, not per connected account."
+    },
+    {
+      "key": "clientSecret",
+      "label": "Client secret",
+      "scope": "provider",
+      "secret": true,
+      "help": "A client secret of the same app registration. One value for the whole installation; Entra expires them, so record the expiry."
+    },
+    {
+      "key": "accessToken",
+      "label": "Access token",
+      "scope": "account",
+      "secret": true,
+      "help": "Per connected Microsoft account, and it expires after about ONE HOUR. The host refreshes it with the refresh token."
+    },
+    {
+      "key": "refreshToken",
+      "label": "Refresh token",
+      "scope": "account",
+      "secret": true,
+      "optional": true,
+      "help": "Per connected Microsoft account; issued only when the consent request includes offline_access. Every refresh answers with a NEW one -- persist it."
+    }
+  ]
+}

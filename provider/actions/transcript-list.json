@@ -1,0 +1,48 @@
+{
+  "$comment": "GET /v1.0/users/{userId}/onlineMeetings/{meetingId}/transcripts -- verified against Microsoft Learn's onlinemeeting-list-transcripts reference 2026-09-16. Only meetings backed by a calendar event get a transcript through this API (Microsoft's own note: a bare onlineMeetings-created meeting with no calendar event does not). UNLIKE Google Meet's transcript_entry_list, Graph does NOT expose the spoken-word text as structured JSON here -- transcriptContentUrl is a separate download (VTT captions), fetched directly rather than through this connector, the same way Resend never carries an attachment's bytes.",
+  "operation": "transcript_list",
+  "kind": "transcript_list",
+  "title": "List transcripts",
+  "description": "List a finished meeting's transcripts and their download URLs.",
+  "summary": "a meeting's transcripts",
+  "icon": "📝",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/onlinemeeting-list-transcripts",
+
+  "sideEffects": "none",
+
+  "request": {
+    "method": "GET",
+    "path": "/v1.0/users/{userId}/onlineMeetings/{meetingId}/transcripts",
+    "encoding": "json"
+  },
+
+  "config": [
+    {
+      "type": "text",
+      "key": "userId",
+      "label": "User ID",
+      "required": true,
+      "description": "The meeting organizer's Microsoft Entra object id.",
+      "send": { "in": "path", "as": "userId", "value": "string" }
+    },
+    {
+      "type": "text",
+      "key": "meetingId",
+      "label": "Meeting ID",
+      "required": true,
+      "description": "From meeting_create's data.id.",
+      "send": { "in": "path", "as": "meetingId", "value": "string" }
+    }
+  ],
+
+  "defaultConfig": { "mode": "auto" },
+
+  "outputShape": [
+    { "path": "data.value", "type": "array", "description": "Usually one. Each has id, meetingId, createdDateTime, endDateTime, and transcriptContentUrl -- a Graph URL that answers with the VTT caption file (text/vtt), not JSON. Download it with the same access token; this connector does not fetch it for you." }
+  ],
+
+  "contract": {
+    "sends": [],
+    "reads": ["value"]
+  }
+}

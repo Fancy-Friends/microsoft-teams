@@ -1,0 +1,21 @@
+{
+  "$comment": "One transcript from a finished meeting. transcriptContentUrl is the ONLY way to reach the spoken-word text -- a Graph URL answering raw VTT, not JSON -- so unlike Google Meet's transcript_entry_list this connector has no structured-text action; a host fetches that URL itself.",
+  "operation": "transcript_list",
+
+  "response": {
+    "value": [
+      {
+        "id": { "$fake": "id", "prefix": "transcript" },
+        "meetingId": { "$config": "meetingId", "as": "string", "fallback": { "$fake": "id", "prefix": "MSo" } },
+        "callId": { "$fake": "uuid" },
+        "createdDateTime": "2026-09-16T09:30:05.0000000Z",
+        "endDateTime": "2026-09-16T09:30:10.0000000Z",
+        "contentCorrelationId": { "$fake": "uuid" },
+        "transcriptContentUrl": "https://graph.microsoft.com/v1.0/users/u/onlineMeetings/m/transcripts/t/content",
+        "meetingOrganizer": {
+          "user": { "id": { "$fake": "id", "prefix": "u" }, "displayName": "Ada Lovelace" }
+        }
+      }
+    ]
+  }
+}

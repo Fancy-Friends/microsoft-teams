@@ -1,0 +1,54 @@
+{
+  "$comment": "GET /v1.0/users/{userId}/onlineMeetings/{meetingId} -- verified against Microsoft Learn's onlinemeeting-get reference 2026-09-16.",
+  "operation": "meeting_get",
+  "kind": "meeting_get",
+  "title": "Get meeting",
+  "description": "Read a Teams meeting's current details.",
+  "summary": "a Teams meeting",
+  "icon": "🎥",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/onlinemeeting-get",
+
+  "sideEffects": "none",
+
+  "request": {
+    "method": "GET",
+    "path": "/v1.0/users/{userId}/onlineMeetings/{meetingId}",
+    "encoding": "json"
+  },
+
+  "config": [
+    {
+      "type": "text",
+      "key": "userId",
+      "label": "User ID",
+      "required": true,
+      "description": "The meeting organizer's Microsoft Entra object id.",
+      "send": { "in": "path", "as": "userId", "value": "string" }
+    },
+    {
+      "type": "text",
+      "key": "meetingId",
+      "label": "Meeting ID",
+      "required": true,
+      "description": "From meeting_create's data.id.",
+      "send": { "in": "path", "as": "meetingId", "value": "string" }
+    }
+  ],
+
+  "defaultConfig": { "mode": "auto" },
+
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "The meeting's id." },
+    { "path": "data.joinWebUrl", "type": "string", "description": "The join link." },
+    { "path": "data.subject", "type": "string", "description": "The meeting's subject." },
+    { "path": "data.startDateTime", "type": "string", "description": "ISO 8601." },
+    { "path": "data.endDateTime", "type": "string", "description": "ISO 8601." },
+    { "path": "data.participants.organizer.identity.user.id", "type": "string", "description": "The organizer's user id." },
+    { "path": "data.participants.organizer.identity.user.displayName", "type": "string", "description": "The organizer's display name." }
+  ],
+
+  "contract": {
+    "sends": [],
+    "reads": ["id", "joinWebUrl", "subject", "startDateTime", "endDateTime", "participants"]
+  }
+}
