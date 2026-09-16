@@ -26,12 +26,28 @@
     "refreshTokenRotates": false,
     "$refreshTokenRotates": "Replaced but NOT revoked -- the same Microsoft identity platform behaviour microsoft-outlook already documents: \"Refresh tokens replace themselves with a fresh token upon every use. The Microsoft identity platform doesn't revoke old refresh tokens when used to fetch new access tokens.\" A retried or concurrent refresh cannot revoke the grant, which is the only thing the flag guards.",
     "accessTokenTtlSeconds": 3600,
-    "$scopeComment": "OnlineMeetings.ReadWrite.All is what meeting_create and meeting_get need as APPLICATION permissions -- the /users/{userId}/onlineMeetings path a bot calls without a live user session, per Microsoft's own least-privilege table. OnlineMeetingTranscript.Read.All is what transcript_list needs. Both require a tenant administrator to grant an application access policy authorizing this app to act on a named user's behalf (see setup) -- consent alone is not enough, unlike a normal delegated OAuth flow.",
+    "$scopeComment": "OnlineMeetings.ReadWrite.All is what meeting_create and meeting_get need as APPLICATION permissions -- the /users/{userId}/onlineMeetings path a bot calls without a live user session, per Microsoft's own least-privilege table. OnlineMeetingTranscript.Read.All is what transcript_list needs. Both additionally require the tenant administrator's application access policy -- see the manifest's setup array, not just this comment, so the fact reaches a host through the registry index rather than only a reader of this file.",
     "$comment": "The package DECLARES the dance and does not perform it. `common` as the tenant accepts work, school and personal accounts, though the application-permission path this connector uses needs a WORK OR SCHOOL account specifically -- personal Microsoft accounts are not supported for any of these three operations, per Microsoft's own permission tables."
   },
 
   "sandbox": "separate-account",
   "sandboxNote": "Microsoft's test estate is a Microsoft 365 Developer Program sandbox: a separate E5 tenant with its own users and its own OAuth consent, on the SAME host -- the same fact microsoft-outlook already verified for Graph generally. Eligibility is limited (Visual Studio Professional/Enterprise, ISV Success / MAICPP partners, or Premier/Unified Support) and the tenant expires after 90 days of no development activity. Without one, every call reaches a real tenant.",
+
+  "summary": "a Teams meeting or its transcripts, on behalf of a tenant user",
+
+  "$setupComment": "The precondition every operation shares, moved out of oauth.$scopeComment and into a real setup step (2026-09-16, after Fancy pointed out that a $-prefixed key is commentary nothing downstream carries -- the registry index's entryFor() has no field for a host-actionable precondition, and would drop this exactly like idempotencyNote and the OAuth endpoints were once dropped). Verified against Microsoft Learn's own application-access-policy reference page.",
+  "setup": [
+    {
+      "title": "Register an app and add the OAuth redirect URL",
+      "detail": "In the Microsoft Entra admin center, App registrations, register (or reuse) an app and add {host.oauthRedirectUrl} under Authentication as a Web redirect URI. Record the Application (client) ID and create a client secret.",
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app"
+    },
+    {
+      "title": "Grant the app an application access policy naming the target user",
+      "detail": "OAuth consent alone does not authorize meeting_create, meeting_get or transcript_list -- Microsoft Graph refuses every call with \"No application access policy found for this app\" until a tenant administrator runs New-CsApplicationAccessPolicy (with this app's client ID) and Grant-CsApplicationAccessPolicy naming the userId these operations will act on. Changes take up to 30 minutes to reach the Graph REST API.",
+      "url": "https://learn.microsoft.com/en-us/graph/cloud-communication-online-meeting-application-access-policy"
+    }
+  ],
 
   "baseUrls": {
     "live": "https://graph.microsoft.com",
