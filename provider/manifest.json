@@ -39,13 +39,16 @@
   "setup": [
     {
       "title": "Register an app and add the OAuth redirect URL",
-      "detail": "In the Microsoft Entra admin center, App registrations, register (or reuse) an app and add {host.oauthRedirectUrl} under Authentication as a Web redirect URI. Record the Application (client) ID and create a client secret.",
-      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app"
+      "detail": "In the Microsoft Entra admin center, App registrations, register (or reuse) an app and add {{oauthRedirectUrl}} under Authentication as a Web redirect URI. Record the Application (client) ID and create a client secret.",
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app",
+      "fields": ["clientId", "clientSecret"],
+      "copy": [{ "label": "Redirect URI (Web)", "value": "{{oauthRedirectUrl}}" }]
     },
     {
       "title": "Grant the app an application access policy naming the target user",
       "detail": "OAuth consent alone does not authorize meeting_create, meeting_get or transcript_list -- Microsoft Graph refuses every call with \"No application access policy found for this app\" until a tenant administrator runs New-CsApplicationAccessPolicy (with this app's client ID) and Grant-CsApplicationAccessPolicy naming the userId these operations will act on. Changes take up to 30 minutes to reach the Graph REST API.",
-      "url": "https://learn.microsoft.com/en-us/graph/cloud-communication-online-meeting-application-access-policy"
+      "url": "https://learn.microsoft.com/en-us/graph/cloud-communication-online-meeting-application-access-policy",
+      "done": "meeting_get answers instead of Graph refusing with \"No application access policy found for this app\" (allow up to 30 minutes after granting the policy)."
     }
   ],
 
