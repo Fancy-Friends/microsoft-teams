@@ -12,6 +12,18 @@ derived — somebody has to write what changed — but writing it in the
 provider repo would be a hand-edit that `.weaver.json` flags and the next
 sync destroys.
 
+## [0.2.2] — 2026-11-08
+
+### Changed
+
+- **Setup steps use the `{{oauthRedirectUrl}}` token** (was
+  `{host.oauthRedirectUrl}`): the closed set of five shared with
+  fancy-connector-core 0.15.1.
+  - The app-registration step says it yields `clientId` and `clientSecret`,
+    and gives the redirect URI to copy.
+  - The access-policy step says how you know it took effect.
+  - SETUP.md is generated alongside the README.
+
 ## [0.2.1] — 2026-11-08
 
 ### Fixed
