@@ -20,12 +20,12 @@ return [
 
     'credentials' => [
         // Application (client) ID (one per installation).
-        'clientId' => env('MICROSOFT_TEAMS_CLIENTID'),
+        'clientId' => env('MICROSOFT_TEAMS_CLIENT_ID', env('MICROSOFT_TEAMS_CLIENTID')),
         // Client secret (one per installation, secret).
-        'clientSecret' => env('MICROSOFT_TEAMS_CLIENTSECRET'),
+        'clientSecret' => env('MICROSOFT_TEAMS_CLIENT_SECRET', env('MICROSOFT_TEAMS_CLIENTSECRET')),
         // Access token (per connected account, secret).
-        'accessToken' => env('MICROSOFT_TEAMS_ACCESSTOKEN'),
+        'accessToken' => env('MICROSOFT_TEAMS_ACCESS_TOKEN', env('MICROSOFT_TEAMS_ACCESSTOKEN')),
         // Refresh token (per connected account, secret).
-        'refreshToken' => env('MICROSOFT_TEAMS_REFRESHTOKEN'),
+        'refreshToken' => env('MICROSOFT_TEAMS_REFRESH_TOKEN', env('MICROSOFT_TEAMS_REFRESHTOKEN')),
     ],
 ];
