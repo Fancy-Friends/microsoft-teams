@@ -12,6 +12,22 @@ derived — somebody has to write what changed — but writing it in the
 provider repo would be a hand-edit that `.weaver.json` flags and the next
 sync destroys.
 
+## [0.2.1] — 2026-11-08
+
+### Fixed
+
+- **The Laravel config's environment variable names now split camelCase**,
+  as documented. **Consumer action: none.** The old unsplit names are still
+  read as a fallback, so an app that set them keeps working; the new names
+  are preferred.
+
+  | Preferred | Still read |
+  |---|---|
+  | `MICROSOFT_TEAMS_CLIENT_ID` | `MICROSOFT_TEAMS_CLIENTID` |
+  | `MICROSOFT_TEAMS_CLIENT_SECRET` | `MICROSOFT_TEAMS_CLIENTSECRET` |
+  | `MICROSOFT_TEAMS_ACCESS_TOKEN` | `MICROSOFT_TEAMS_ACCESSTOKEN` |
+  | `MICROSOFT_TEAMS_REFRESH_TOKEN` | `MICROSOFT_TEAMS_REFRESHTOKEN` |
+
 ## [0.2.0] — 2026-11-08
 
 ### Added
